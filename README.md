@@ -13,3 +13,8 @@ Revisando testes de integração
 - testes com classes de produção, com uma configuração específica para usar o InMemoryDatabase;
 - dummy object;
 - fake object;
+
+## Injetando dados em cenários complexos
+- o que fazer quando seus cenários de testes exigem recursos que injetem informações específicas, exceções ou falhas;
+- padrão Stub para injetar informações específicas nos cenários de testes;
+- o framework Moq;
