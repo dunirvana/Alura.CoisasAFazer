@@ -33,7 +33,7 @@ namespace Alura.CoisasAFazer.Testes
                 new Tarefa(6, "Comprar ração", new Categoria("Compras"), new DateTime(2019,11,20), null, StatusTarefa.Criada),
             };
             var options = new DbContextOptionsBuilder<DbTarefasContext>()
-                //.UseInMemoryDatabase("Testes de Integração")
+                .UseInMemoryDatabase("Testes de Integração")
                 .Options;
             var contexto = new DbTarefasContext(options);
             var repo = new RepositorioTarefa(contexto);
