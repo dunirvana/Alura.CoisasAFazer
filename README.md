@@ -11,3 +11,5 @@ Revisando testes de integração
 - criar massas de dados que materializem cenários complexos e ao mesmo tempo garantem testes isolados e independentes;
 - repositório fake;
 - testes com classes de produção, com uma configuração específica para usar o InMemoryDatabase;
+- dummy object;
+- fake object;
