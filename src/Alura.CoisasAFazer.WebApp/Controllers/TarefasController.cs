@@ -11,14 +11,16 @@ namespace Alura.CoisasAFazer.WebApp.Controllers
     [ApiController]
     public class TarefasController : ControllerBase
     {
-        private readonly IRepositorioTarefas _repo;
+        IRepositorioTarefas _repo;
+        ILogger<CadastraTarefaHandler> _logger;
 
-        public TarefasController(IRepositorioTarefas repo)
+        public TarefasController(IRepositorioTarefas repo, ILogger<CadastraTarefaHandler> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
-        [HttpPost]
+        [HttpPost] // POST /tarefas { info }
         public IActionResult EndpointCadastraTarefa(CadastraTarefaVM model)
         {
             var cmdObtemCateg = new ObtemCategoriaPorId(model.IdCategoria);
@@ -28,12 +30,11 @@ namespace Alura.CoisasAFazer.WebApp.Controllers
                 return NotFound("Categoria não encontrada");
             }
 
-            var _logger = new LoggerFactory().CreateLogger<CadastraTarefaHandler>();
-
             var comando = new CadastraTarefa(model.Titulo, categoria, model.Prazo);
             var handler = new CadastraTarefaHandler(_repo, _logger);
-            handler.Execute(comando);
-            return Ok();
+            var resultado = handler.Execute(comando);
+            if (resultado.IsSuccess) return Ok();
+            return StatusCode(500);
         }
     }
 }

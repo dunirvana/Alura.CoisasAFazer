@@ -8,7 +8,6 @@ using System.Linq;
 using Xunit;
 using Moq;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace Alura.CoisasAFazer.Testes
 {
@@ -44,7 +43,7 @@ namespace Alura.CoisasAFazer.Testes
         public void DadaTarefaComInfoValidasDeveLogar()
         {
             //arrange
-            var tituloTarefaEsperado = "Estudar Xunit";
+            var tituloTarefaEsperado = "Usar Moq para aprofundar conhecimento de API";
             var comando = new CadastraTarefa(tituloTarefaEsperado, new Categoria(100, "Estudo"), new DateTime(2019, 12, 31));
 
             var mockLogger = new Mock<ILogger<CadastraTarefaHandler>>();
@@ -58,35 +57,14 @@ namespace Alura.CoisasAFazer.Testes
                 mensagemCapturada = func(state, exception);
             };
 
-            //mockLogger.Setup(l =>
-            //    l.Log(
-            //        It.IsAny<LogLevel>(), //nível de log => LogError
-            //        It.IsAny<EventId>(), //identificador do evento
-            //        It.IsAny<object>(), //objeto que será logado
-            //        It.IsAny<Exception>(),    //exceção que será logada
-            //        It.IsAny<Func<object, Exception, string>>() //função que converte objeto+exceção >> string)
-            //    )).Callback(captura);
-
-            mockLogger.Setup(
-              l => l.Log(
-                  LogLevel.Debug,
-                  It.IsAny<EventId>(),
-                  It.IsAny<It.IsAnyType>(),
-                  It.IsAny<Exception>(),
-                  (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()))
-              .Callback((IInvocation invocation) =>
-              {
-                  var logLevel = (LogLevel)invocation.Arguments[0];
-                  var eventId = (EventId)invocation.Arguments[1];
-                  var state = (IReadOnlyCollection<KeyValuePair<string, object>>)invocation.Arguments[2];
-                  var exception = invocation.Arguments[3] as Exception;
-                  var formatter = invocation.Arguments[4] as Delegate;
-                  var formatterStr = formatter.DynamicInvoke(state, exception);
-
-                  levelCapturado = logLevel;
-                  mensagemCapturada = formatterStr.ToString();
-              }
-              );
+            mockLogger.Setup(l => 
+                l.Log(
+                    It.IsAny<LogLevel>(), //nível de log => LogError
+                    It.IsAny<EventId>(), //identificador do evento
+                    It.IsAny<object>(), //objeto que será logado
+                    It.IsAny<Exception>(),    //exceção que será logada
+                    It.IsAny<Func<object, Exception, string>>() //função que converte objeto+exceção >> string)
+                )).Callback(captura);
 
             var mock = new Mock<IRepositorioTarefas>();
 
@@ -148,15 +126,15 @@ namespace Alura.CoisasAFazer.Testes
             CommandResult resultado = handler.Execute(comando);
 
             //assert
-            mockLogger.Verify(l =>
-                           l.Log(
-                               LogLevel.Error,      // nivel de log
-                               It.IsAny<EventId>(), // identificador do evento 
-                               It.Is<It.IsAnyType>((v, t) => true),  // objeto que será logado
-                               excecaoEsperada,    // exceção que sera logada
-                               It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), // função que converte objeto + exceção em string
-                           Times.Once());
-
+            mockLogger.Verify(l => 
+                l.Log(
+                    LogLevel.Error, //nível de log => LogError
+                    It.IsAny<EventId>(), //identificador do evento
+                    It.IsAny<object>(), //objeto que será logado
+                    excecaoEsperada,    //exceção que será logada
+                    It.IsAny<Func<object, Exception, string>>()
+                ), //função que converte objeto+exceção >> string
+                Times.Once());
         }
 
     }

@@ -12,7 +12,7 @@ namespace Alura.CoisasAFazer.Testes
     public class ObtemCategoriaPorIdExecute
     {
         [Fact]
-        public void QuandoIdForExistenteDeveChamarObtemCategoriaPorIdUmaUnicaVez()
+        public void QuandoForChamadoDeveInvocarObtemCategoriaPorIdNoRepositorio()
         {
             //arrange
             var idCategoria = 20;
