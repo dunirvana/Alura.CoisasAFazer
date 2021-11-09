@@ -3,6 +3,7 @@ using Alura.CoisasAFazer.WebApp.Models;
 using Alura.CoisasAFazer.Core.Commands;
 using Alura.CoisasAFazer.Services.Handlers;
 using Alura.CoisasAFazer.Infrastructure;
+using Microsoft.Extensions.Logging;
 
 namespace Alura.CoisasAFazer.WebApp.Controllers
 {
@@ -27,8 +28,10 @@ namespace Alura.CoisasAFazer.WebApp.Controllers
                 return NotFound("Categoria não encontrada");
             }
 
+            var _logger = new LoggerFactory().CreateLogger<CadastraTarefaHandler>();
+
             var comando = new CadastraTarefa(model.Titulo, categoria, model.Prazo);
-            var handler = new CadastraTarefaHandler(_repo);
+            var handler = new CadastraTarefaHandler(_repo, _logger);
             handler.Execute(comando);
             return Ok();
         }
